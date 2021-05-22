@@ -49,6 +49,38 @@ namespace SchedulingAppointment.Services
             }
         }
 
+        public List<AppointmentVM> DoctorsEventsById(string doctorId)
+        {
+            return _db.Appointments.Where(x => x.DoctorId == doctorId).ToList().Select(x => new AppointmentVM()
+            {
+                Id=x.Id,
+                Description =x.Description,
+                StartDate = x.StartDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                EndDate = x.EndDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                Title = x.Title,
+                Duration = x.Duration,
+                IsDoctorApproved = x.IsDoctorApproved
+            }).ToList();
+        }
+
+        public AppointmentVM GetbyId(int id)
+        {
+            return _db.Appointments.Where(x => x.Id == id).ToList().Select(c => new AppointmentVM()
+            {
+                Id = c.Id,
+                Description = c.Description,
+                StartDate = c.StartDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                EndDate = c.EndDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                Title = c.Title,
+                Duration = c.Duration,
+                IsDoctorApproved = c.IsDoctorApproved,
+                PatientId = c.PatientId,
+                DoctorId = c.DoctorId,
+                PatientName = _db.Users.Where(x => x.Id == c.PatientId).Select(x => x.Name).FirstOrDefault(),
+                DoctorName = _db.Users.Where(x => x.Id == c.DoctorId).Select(x => x.Name).FirstOrDefault(),
+            }).SingleOrDefault();
+        }
+
         public List<DoctorVM> GetDoctorList()
         {
             var doctors = (from user in _db.Users
@@ -77,6 +109,20 @@ namespace SchedulingAppointment.Services
                         ).ToList();
 
             return patients;
+        }
+
+        public List<AppointmentVM> PatientsEventsById(string patientId)
+        {
+            return _db.Appointments.Where(x => x.PatientId == patientId).ToList().Select(x => new AppointmentVM()
+            {
+                Id = x.Id,
+                Description = x.Description,
+                StartDate = x.StartDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                EndDate = x.EndDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                Title = x.Title,
+                Duration = x.Duration,
+                IsDoctorApproved = x.IsDoctorApproved
+            }).ToList();
         }
     }
 }
