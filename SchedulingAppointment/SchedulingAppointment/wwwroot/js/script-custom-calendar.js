@@ -92,7 +92,7 @@ function onShowModal(obj, isEventDetail) {
             $("#btnConfirm").removeClass("d-none");
             $("#btnSubmit").removeClass("d-none");
         }
-        //$("#btnDelete").removeClass("d-none");
+        $("#btnDelete").removeClass("d-none");
     }
     else {
         $("#appointmentDate").val(obj.startStr + " " + new moment().format("hh:mm A"));
@@ -110,9 +110,7 @@ function onCloseModal() {
     $("#title").val('');
     $("#description").val('');
     $("#appointmentDate").val('');
-    $("#duration").val('');
-  
-    $("#patientId").val('');
+
 
     $("#appointmentInput").modal("hide");
 }
