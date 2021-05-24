@@ -59,10 +59,16 @@ namespace SchedulingAppointment.Services
                     AdminId = model.AdminId
                 };
 
-                await _emailSender.SendEmailAsync(doctor.Email, "Appointment Created",
+                GmailSender.SendGmail(doctor.Email, "Appointment Created",
                  $"Your appointment with {patient.Name} is created and in pending status");
-                await _emailSender.SendEmailAsync(patient.Email, "Appointment Created",
+                GmailSender.SendGmail(patient.Email, "Appointment Created",
                     $"Your appointment with {doctor.Name} is created and in pending status");
+
+
+                //await _emailSender.SendEmailAsync(doctor.Email, "Appointment Created",
+                // $"Your appointment with {patient.Name} is created and in pending status");
+                //await _emailSender.SendEmailAsync(patient.Email, "Appointment Created",
+                //    $"Your appointment with {doctor.Name} is created and in pending status");
                 _db.Appointments.Add(appointment);
                 await _db.SaveChangesAsync();
                 return 2;
