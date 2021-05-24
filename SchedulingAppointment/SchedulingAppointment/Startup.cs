@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SchedulingAppointment.DbInitializer;
 using SchedulingAppointment.Models;
 using SchedulingAppointment.Services;
 using SchedulingAppointment.Utility;
@@ -37,6 +38,7 @@ namespace SchedulingAppointment
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddDistributedMemoryCache();
             services.AddScoped<IEmailSender, EmailSender>();
+            services.AddScoped<IDbInitializer, DbInitializer.DbInitializer>();
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromDays(10);
@@ -51,7 +53,7 @@ namespace SchedulingAppointment
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitializer dbInitializer)
         {
             if (env.IsDevelopment())
             {
@@ -70,6 +72,7 @@ namespace SchedulingAppointment
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
+            dbInitializer.Initalize();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
