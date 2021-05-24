@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SchedulingAppointment.Models;
 using SchedulingAppointment.Services;
+using SchedulingAppointment.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,11 +36,16 @@ namespace SchedulingAppointment
             services.AddTransient<IAppointmentService, AppointmentService>();
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddDistributedMemoryCache();
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromDays(10);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
+            });
+            services.ConfigureApplicationCookie(x =>
+            {
+                x.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Home/AccessDenied");
             });
             services.AddHttpContextAccessor();
         }
